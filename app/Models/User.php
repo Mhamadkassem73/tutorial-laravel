@@ -29,6 +29,7 @@ class User extends Authenticatable implements JWTSubject
         'user_phone',
         'name',
         'user_level',
+        'user_lastQuestionId'
     ];
 
     /**
