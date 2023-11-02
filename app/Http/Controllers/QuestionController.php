@@ -27,7 +27,11 @@ class QuestionController extends ApiController
         ->update([
             'user_lastQuestionId' => $request->questionId
         ]);
-        $this->saveAnswer($request->questionId,$request->answer,$request->isTrue,auth()->user()->id);
+        if(isset($request->isTrue))
+        {
+            $this->saveAnswer($request->questionId,$request->answer,$request->isTrue,auth()->user()->id);
+        }
+
         $questionId=Question::where("question_id",'>',$request->questionId)
         ->orderBy("question_id", "asc")
         ->first()
@@ -38,8 +42,8 @@ class QuestionController extends ApiController
     public function fetchNextQuestionByIdFynction($questionId){
         $question=Question::where("question_id","=",$questionId)->first();
         $data['question']=$question;
-        $data['image']=env('DB_HOST').$question->level_id."/".$question->lesson_id."/".$question->axis_id."/".$question->question_id."/".$question->question_image;
-        $data['voice']=env('DB_HOST').$question->level_id."/".$question->lesson_id."/".$question->axis_id."/".$question->question_id."/".$question->question_voice;
+        $data['image']=env('URL').$question->level_id."/".$question->lesson_id."/".$question->axis_id."/".$question->question_id."/".$question->question_image;
+        $data['voice']=env('URL').$question->level_id."/".$question->lesson_id."/".$question->axis_id."/".$question->question_id."/".$question->question_voice;
         $data['answers']=Answer::where("question_id","=",$questionId)
         ->select(
             'answer_id',
