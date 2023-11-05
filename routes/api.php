@@ -21,12 +21,15 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::get('/testFunction', [testController::class, 'testFunction']);
-Route::get('/selectAnswersByuser/{userId}', [QuestionController::class, 'selectAnswersByuser']);
+Route::post('/selectAnswersByuser', [QuestionController::class, 'selectAnswersByuser']);
 Route::post('/fetchUser', [UserController::class, 'fetchUser'])->middleware(['jwt.verify']);
 Route::post('/addUser', [UserController::class, 'addUser'])->middleware(['jwt.verify']);
 Route::put('/updateUser/{id?}', [UserController::class, 'updateUser'])->middleware(['jwt.verify']);
+
 Route::post('/signIn', [UserController::class, 'signIn']);
 
+
+Route::get('/fetchLessons', [QuestionController::class, 'fetchLessons'])->middleware(['jwt.verify']);
 Route::get('/fetchFirstQuestion', [QuestionController::class, 'fetchFirstQuestion'])->middleware(['jwt.verify']);
 Route::post('/fetchNextQuestionById/{questionId}', [QuestionController::class, 'fetchNextQuestionById'])->middleware(['jwt.verify']);
 

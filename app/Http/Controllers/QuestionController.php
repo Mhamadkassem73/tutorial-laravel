@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Answer;
+use App\Models\Lesson;
 use App\Models\Question;
 use App\Models\User;
 use App\Models\userAnswers;
@@ -81,7 +82,10 @@ $date=now();
 
     public function selectAnswersByuser(Request $request)
     {
-        $answrs=userAnswers::where("user_id",'=',$request->userId)
+        $answrs=userAnswers::where([
+            ["user_id",'=',$request->userId],
+            ["lesson_id",'=',$request->lesson],
+            ])
         ->orderBy("userAnswer_date","DESC")
         ->get();
         $questionId= User::where("id",'=',$request->userId)->first()->user_lastQuestionId;
@@ -96,5 +100,20 @@ $date=now();
             "lastQuestion"=> $question,
         ];
         return ApiController::successResponse($data, 200);
+    }
+
+
+    public function fetchLessons(Request $request){
+        // $questionId= auth()->user_lastQuestionId;
+         $questionId= auth()->user()->user_lastQuestionId;
+         $question=Question::where("question_id","=",$questionId)->first();
+
+         $lessons=Lesson::where([
+            ['level_id',"<=",$question->level_id],
+            ['axis_id',"<=",$question->axis_id],
+         ])
+         ->orderBy("axis_id")
+         ->get();
+        return ApiController::successResponse($lessons, 200);
     }
 }
