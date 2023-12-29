@@ -17,6 +17,8 @@ class Answer extends Model
         'question_right',
         'question_left', 
         'question_count',
+        "question_voice",
+        "question_image"
     ];
  
 }

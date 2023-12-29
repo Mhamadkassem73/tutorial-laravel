@@ -21,6 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::get('/testFunction', [testController::class, 'testFunction']);
+Route::post('/signUp', [UserController::class, 'signUp']);
 Route::post('/selectAnswersByuser', [QuestionController::class, 'selectAnswersByuser']);
 Route::post('/fetchUser', [UserController::class, 'fetchUser'])->middleware(['jwt.verify']);
 Route::post('/addUser', [UserController::class, 'addUser'])->middleware(['jwt.verify']);

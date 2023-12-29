@@ -45,17 +45,32 @@ class QuestionController extends ApiController
         $data['question']=$question;
         $data['image']=env('URL').$question->level_id."/".$question->lesson_id."/".$question->axis_id."/".$question->question_id."/".$question->question_image;
         $data['voice']=env('URL').$question->level_id."/".$question->lesson_id."/".$question->axis_id."/".$question->question_id."/".$question->question_voice;
-        $data['answers']=Answer::where("question_id","=",$questionId)
+        $data['answers']=Answer::
+        leftJoin("questions","questions.question_id","=","answers.question_id")
+        ->where("questions.question_id", "=", $questionId)
         ->select(
-            'answer_id',
-            'question_id',
-            'question_value as value',
-            'question_isTrue as isTrue',
-            'question_right as right',
-            'question_left as left', 
-            'question_count as count ',
+            'answers.answer_id',
+            'answers.question_id',
+            'answers.question_value as value',
+            'answers.question_isTrue as isTrue',
+            'answers.question_right as right',
+            'answers.question_left as left',
+            'answers.question_count as count',
+            DB::raw("CONCAT('" . env('URL') . "', 
+            questions.level_id, '/', 
+            questions.lesson_id, '/', 
+            questions.axis_id, '/', 
+                            answers.question_id, '/', 
+                            answers.question_image) AS question_image"),
+            DB::raw("CONCAT('" . env('URL') . "', 
+            questions.level_id, '/', 
+            questions.lesson_id, '/', 
+            questions.axis_id, '/', 
+                            answers.question_id, '/', 
+                            answers.question_voice) AS question_voice"),
             DB::raw('false as selected')
         )
+        ->orderBy("answers.answer_id")
         ->get();
 
 
