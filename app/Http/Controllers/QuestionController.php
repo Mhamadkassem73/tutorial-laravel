@@ -31,6 +31,12 @@ class QuestionController extends ApiController
                 'user_lastQuestionId' => $request->questionId
             ]);
         if (isset($request->isTrue)) {
+            $answer='';
+            if(isset($request->answer))
+            {
+                $answer=$request->answer;
+            }
+       
             $this->saveAnswer($request->questionId, $request->answer, $request->isTrue, auth()->user()->id);
         }
 
@@ -93,7 +99,7 @@ class QuestionController extends ApiController
 
         return $data;
     }
-    public function saveAnswer(int $questionId, string $answer, bool $isTrue, int $userId)
+    public function saveAnswer(int $questionId,  $answer, bool $isTrue, int $userId)
     {
         $question = Question::where("question_id", "=", $questionId)->first();
         $date = now();
