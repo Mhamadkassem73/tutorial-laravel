@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\testController;
 use App\Http\Controllers\User\UserController;
+use App\Http\Controllers\Zoom\ZoomController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,5 +35,7 @@ Route::get('/fetchLessons', [QuestionController::class, 'fetchLessons'])->middle
 Route::get('/fetchFirstQuestion', [QuestionController::class, 'fetchFirstQuestion'])->middleware(['jwt.verify']);
 Route::post('/fetchNextQuestionById/{questionId}', [QuestionController::class, 'fetchNextQuestionById'])->middleware(['jwt.verify']);
 
+Route::get('/createNewZoomMeeting', [ZoomController::class, 'createNewZoomMeeting'])->middleware(['jwt.verify']);
+Route::get('/fetchZoomById', [ZoomController::class, 'fetchZoomById'])->middleware(['jwt.verify']);
 
  

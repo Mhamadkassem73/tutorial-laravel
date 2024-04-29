@@ -197,6 +197,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
         Fruitcake\Cors\CorsServiceProvider::class,
+        Jubaer\Zoom\ZoomServiceProvider::class,
     ],
 
     /*
@@ -211,6 +212,8 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
+        'Zoom' => Jubaer\Zoom\Facades\Zoom::class,
+
         // 'ExampleClass' => App\Example\ExampleClass::class,
     ])->toArray(),
 
