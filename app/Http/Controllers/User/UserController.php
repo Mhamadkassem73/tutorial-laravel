@@ -122,6 +122,7 @@ class UserController extends ApiController
                     'user_phone' => $request->userPhone,
                     'name' => $request->name,
                     'user_level' => $request->userLevel,
+                    'user_withprof' => $request->withprof,
                 ]);
 
             return ApiController::successResponse($user, 200);

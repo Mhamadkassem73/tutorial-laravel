@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Zoom;
 
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\User\SendEmailController;
 use App\Models\ZoomModel;
 use Carbon\Carbon;
 use DateTime;
@@ -14,7 +15,10 @@ class ZoomController extends ApiController
 {
     public function createNewZoomMeeting(Request $request)
     {
-
+        if(!auth()->user()->user_withprof)
+        {
+            return ApiController::errorResponse("Please upgrade your account to register Zoom with prof", 400);  
+        }
         //return  Carbon::now()->toDateTimeString();
 
         //$dateToCheck = null;
@@ -82,7 +86,7 @@ class ZoomController extends ApiController
             "start_time" => $date, // set your start time Carbon::create(2024, 4, 27, 15, 0, 0)
             "template_id" => 'Dv4YdINdTk+Z5RToadh5ug==', // set your template id  Ex: "Dv4YdINdTk+Z5RToadh5ug==" from https://marketplace.zoom.us/docs/api-reference/zoom-api/meetings/meetingtemplates
             "pre_schedule" => false,  // set true if you want to create a pre-scheduled meeting
-            "schedule_for" => 'mhamadkassem73@gmail.com', // set your schedule for ,'mhamadkassem73@gmail.com'//ali.kassem221994@outlook.com
+            "schedule_for" => 'info@midad.online', // set your schedule for ,'mhamadkassem73@gmail.com'//ali.kassem221994@outlook.com
             "settings" => [
                 'join_before_host' => false, // if you want to join before host set true otherwise set false
                 'host_video' => false, // if you want to start video when host join set true otherwise set false
@@ -91,7 +95,7 @@ class ZoomController extends ApiController
                 'waiting_room' => false, // if you want to use waiting room for participants set true otherwise set false
                 'audio' => 'both', // values are 'both', 'telephony', 'voip'. default is both.
                 'auto_recording' => 'none', // values are 'none', 'local', 'cloud'. default is none.
-                'approval_type' => 0, // 0 => Automatically Approve, 1 => Manually Approve, 2 => No Registration Required
+                'approval_type' => 2, // 0 => Automatically Approve, 1 => Manually Approve, 2 => No Registration Required
             ],
 
         ]);
@@ -105,19 +109,27 @@ class ZoomController extends ApiController
             'zoom_meetingid' => $meetings['data']['pstn_password'],
         ]);
 
+        $sendEmailController = new SendEmailController();
+        $sendEmail=$sendEmailController->sendZoomMailFunc(auth()->user()->user_email, $meetings['data']['pstn_password'],$meetings['data']['password'],$meetings['data']['join_url'],$zoom_date);
         //return  $createZoom;
         return ApiController::successResponse($createZoom, 200);
     }
 
     public function  fetchZoomById(Request $request)
     {
-        
         $zoom = ZoomModel::where(
             [
                 ['zoom_date', '>', Carbon::now()->toDateTimeString()],
-               ['user_id', '=',  auth()->user()->id],
+                 ['user_id', '=',  auth()->user()->id],
             ]
         )->get();
         return ApiController::successResponse($zoom, 200);
+    }
+
+
+    public function getAllMeetings(Request $request)
+    {
+        $meetings = Zoom::getAllMeeting();
+        return ApiController::successResponse($meetings, 200);
     }
 }

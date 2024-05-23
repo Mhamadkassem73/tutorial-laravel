@@ -4,6 +4,7 @@ use App\Http\Controllers\QuestionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\testController;
+use App\Http\Controllers\User\SendEmailController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Zoom\ZoomController;
 
@@ -37,5 +38,11 @@ Route::post('/fetchNextQuestionById/{questionId}', [QuestionController::class, '
 
 Route::get('/createNewZoomMeeting', [ZoomController::class, 'createNewZoomMeeting'])->middleware(['jwt.verify']);
 Route::get('/fetchZoomById', [ZoomController::class, 'fetchZoomById'])->middleware(['jwt.verify']);
+Route::get('/getAllMeetings', [ZoomController::class, 'getAllMeetings'])->middleware(['jwt.verify']);
+
+
+Route::post('/sendEmail', [SendEmailController::class, 'sendEmail']);
+Route::post('/forgotPassEmail', [SendEmailController::class, 'forgotPassEmail']);
+Route::post('/forgotPass', [SendEmailController::class, 'forgotPass']);
 
  
